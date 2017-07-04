@@ -5,16 +5,12 @@ defmodule Godaddy.Api do
   in the examples below.
   """
 
+  def url, do: Application.get_env(:godaddy, :api_url)
+  def key, do: Application.get_env(:godaddy, :api_key)
+  def secret, do: Application.get_env(:godaddy, :api_secret)
+
   @doc"""
   Retrieve data from the API using either :get or :post
-
-  ## Examples
-
-      iex> Godaddy.Api.call(:get, %{source: "https://raw.githubusercontent.com/aforward/webfiles/master/x.txt"})
-      {:ok, "A text file\\n"}
-
-      iex> Godaddy.Api.call(:post, %{source: "https://raw.githubusercontent.com/aforward/webfiles/master/x.txt"})
-      {:error, "Expected a 200, received 400"}
   """
   def call(:get, %{source: source, headers: headers}), do: get(source, headers)
   def call(:get, %{source: source}), do: get(source)
@@ -24,25 +20,10 @@ defmodule Godaddy.Api do
 
   @doc"""
   Make an API call using GET.  Optionally provide any required headers
-
-  ## Examples
-
-      iex> Godaddy.Api.get("https://raw.githubusercontent.com/aforward/webfiles/master/x.txt")
-      {:ok, "A text file\\n"}
-
-      iex> Godaddy.Api.get("https://raw.githubusercontent.com/aforward/webfiles/master/x.txt", %{content_type: "text/html"})
-      {:ok, "A text file\\n"}
-
-      iex> Godaddy.Api.get("https://raw.githubusercontent.com/aforward/webfiles/master/missing.txt")
-      {:error, "Expected a 200, received 404"}
-
-      iex> Godaddy.Api.get("http://localhost:1")
-      {:error, :econnrefused}
-
   """
-  def get(source), do: get(source, nil)
+  def get(source), do: get(source, %{})
   def get(source, headers) do
-    source
+    url() <> source
     |> HTTPoison.get(encode_headers(headers))
     |> parse
   end
@@ -110,31 +91,32 @@ defmodule Godaddy.Api do
 
   ## Examples
 
-      iex> Godaddy.Api.encode_headers(%{content_type: "application/json", bearer: "abc123"})
-      [{"Authorization", "Bearer abc123"}, {"Content-Type", "application/json"}]
+      iex> Godaddy.Api.encode_headers(%{content_type: "application/json", ssokey: {"pqr123", "mno456"}})
+      [{"Content-Type", "application/json"}, {"Authorization", "sso-key pqr123:mno456"}]
 
-      iex> Godaddy.Api.encode_headers(%{bearer: "abc123"})
-      [{"Authorization", "Bearer abc123"}]
+      iex> Godaddy.Api.encode_headers(%{ssokey: {"pqr123", "mno456"}})
+      [{"Authorization", "sso-key pqr123:mno456"}]
 
       iex> Godaddy.Api.encode_headers(%{})
-      []
+      [{"Authorization", "sso-key abc123:def456"}]
 
       iex> Godaddy.Api.encode_headers()
-      []
+      [{"Authorization", "sso-key abc123:def456"}]
 
       iex> Godaddy.Api.encode_headers(nil)
-      []
+      [{"Authorization", "sso-key abc123:def456"}]
 
   """
   def encode_headers(), do: encode_headers(%{})
   def encode_headers(nil), do: encode_headers(%{})
   def encode_headers(data) do
-    data
+    %{ssokey: {key(), secret()}}
+    |> Map.merge(data)
     |> reject_nil
     |> Enum.map(&header/1)
     |> Enum.reject(&is_nil/1)
   end
-  defp header({:bearer, bearer}), do: {"Authorization", "Bearer #{bearer}"}
+  defp header({:ssokey, {key, secret}}), do: {"Authorization", "sso-key #{key}:#{secret}"}
   defp header({:content_type, content_type}), do: {"Content-Type", content_type}
   defp header({:body_type, _}), do: nil
 

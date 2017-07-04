@@ -1,4 +1,6 @@
 defmodule Godaddy.Client do
+  use FnExpr
+
   @moduledoc"""
   Access service functionality through Elixir functions,
   wrapping the underlying HTTP API calls.
@@ -11,6 +13,24 @@ defmodule Godaddy.Client do
     Godaddy.Worker.get/2
     Godaddy.Worker.post/3
   """
+
+  alias Godaddy.Api
+
+  def domains do
+    "/v1/domains"
+    |> Api.get
+    |> parse
+    |> Enum.map(fn %{"domain" => domain} = data -> {domain, data} end)
+    |> Enum.into(%{})
+  end
+
+  def domain(name) do
+    "/v1/domains/#{name}"
+    |> Api.get
+    |> parse
+  end
+
+  defp parse({:ok, body}), do: Poison.decode!(body)
 
 end
 

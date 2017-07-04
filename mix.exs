@@ -9,6 +9,7 @@ defmodule Godaddy.Mixfile do
     {:poison, "~> 3.1.0"},
     {:httpoison, "~> 0.11.1"},
     {:ex_doc, ">= 0.0.0", only: :dev},
+    {:fn_expr, "~> 0.1.0"},
   ]
 
   @aliases [

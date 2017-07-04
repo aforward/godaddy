@@ -1,1 +1,1 @@
-alias Godaddy.{Worker,Api}
+alias Godaddy.{Worker,Api,Client}
