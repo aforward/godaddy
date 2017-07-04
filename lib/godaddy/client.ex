@@ -30,6 +30,13 @@ defmodule Godaddy.Client do
     |> parse
   end
 
+  def set_nameservers(domain, :digitalocean) do
+    "/v1/domains/#{domain}"
+    |> Api.patch(%{"domain" => domain, "nameServers" => ["ns1.digitalocean.com", "ns2.digitalocean.com", "ns3.digitalocean.com"]})
+    |> parse
+  end
+
+  defp parse({:ok, ""}), do: nil
   defp parse({:ok, body}), do: Poison.decode!(body)
 
 end
