@@ -1,15 +1,15 @@
 # Godaddy
 
-"A minimal library for posting messages to the GoDaddy API."
+A minimal library for posting messages to the [GoDaddy API](https://developer.godaddy.com/).
 
 
 ## Installation
 
-Add `stripe_post` to your list of dependencies (`:deps`) in `mix.exs`:
+Add `godaddy` to your list of dependencies (`:deps`) in `mix.exs`:
 
 ```elixir
 @deps [
-  godaddy: "~> 0.1.0"
+  godaddy: "~> 0.2.0"
 ]
 ```
 
