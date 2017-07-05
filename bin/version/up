@@ -2,12 +2,8 @@
 
 MODE=${1-patch}
 
-CURRENT_VERSION=$(./bin/version/current)
 NEXT_VERSION=$(./bin/version/next $MODE)
-
-echo "Updating mix.exs from ${CURRENT_VERSION} to ${NEXT_VERSION}"
-sed -i '' "s/$CURRENT_VERSION/$NEXT_VERSION/g" mix.exs
-
+./bin/version/inc $MODE
 NEW_VERSION=$(./bin/version/current)
 
 if [ "${NEW_VERSION}" != "${NEXT_VERSION}" ]; then
@@ -16,7 +12,4 @@ if [ "${NEW_VERSION}" != "${NEXT_VERSION}" ]; then
 fi
 
 (git add mix.exs && \
- git commit -m "v${NEW_VERSION}" && \
- git tag "v${NEW_VERSION}" && \
- git push && \
- git push --tag)
+ git commit -m "v${NEW_VERSION}")
