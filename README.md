@@ -9,7 +9,7 @@ Add `godaddy` to your list of dependencies (`:deps`) in `mix.exs`:
 
 ```elixir
 @deps [
-  godaddy: "~> 0.2.0"
+  godaddy: "~> 0.2.1"
 ]
 ```
 
