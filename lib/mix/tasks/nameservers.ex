@@ -15,7 +15,10 @@ defmodule Mix.Tasks.Godaddy.Nameservers do
   """
 
   @shortdoc "Set the nameservers for a cloudprovider, e.g. digitalocean"
-  def run([domain | ns_provider_or_servers]) do
+  def run([domain, ns_provider]), do: _run(domain, ns_provider)
+  def run([domain | ns_servers]), do: _run(domain, ns_servers)
+
+  defp _run(domain, ns_provider_or_servers) do
     {:ok, _started} = Application.ensure_all_started(:httpoison)
     Godaddy.Client.set_nameservers(domain, ns_provider_or_servers)
     IO.puts "Updated #{domain} nameservers to #{ns_provider_or_servers |> to_s}"
