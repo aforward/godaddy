@@ -2,6 +2,8 @@ defmodule Godaddy.Mixfile do
   use Mix.Project
 
   @name    :godaddy
+  @git_url "https://github.com/aforward/godaddy"
+  @home_url @git_url
   @version "0.1.0"
 
   @deps [
@@ -15,6 +17,15 @@ defmodule Godaddy.Mixfile do
   @aliases [
   ]
 
+
+  @package [
+    name: @name,
+    files: ["lib", "mix.exs", "README*", "README*", "LICENSE*"],
+    maintainers: ["Andrew Forward"],
+    licenses: ["MIT"],
+    links: %{"GitHub" => @git_url}
+  ]
+
   # ------------------------------------------------------------
 
   def project do
@@ -22,7 +33,14 @@ defmodule Godaddy.Mixfile do
     [
       app:     @name,
       version: @version,
-      elixir:  ">= 1.4.5",
+      elixir:  "~> 1.4",
+      name: "Godaddy",
+      description: "A minimal library for posting messages to the GoDaddy API.",
+      package: @package,
+      source_url: @git_url,
+      homepage_url: @home_url,
+      docs: [main: "Godaddy",
+             extras: ["README.md"]],
       deps:    @deps,
       aliases: @aliases,
       build_embedded:  in_production,

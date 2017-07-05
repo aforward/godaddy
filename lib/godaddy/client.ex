@@ -1,20 +1,11 @@
 defmodule Godaddy.Client do
   use FnExpr
 
-  @moduledoc"""
-  Access service functionality through Elixir functions,
-  wrapping the underlying HTTP API calls.
-
-  This is where you will want to write your custom
-  code to access your API, and it is probably best
-  to make those calls through your Worker.
-
-    Godaddy.Worker.http/2
-    Godaddy.Worker.get/2
-    Godaddy.Worker.post/3
-  """
-
   alias Godaddy.Api
+
+  @moduledoc false
+
+  @digitalocean_ns_servers ["ns1.digitalocean.com", "ns2.digitalocean.com", "ns3.digitalocean.com"]
 
   def domains do
     "/v1/domains"
@@ -30,13 +21,17 @@ defmodule Godaddy.Client do
     |> parse
   end
 
-  def set_nameservers(domain, :digitalocean) do
+  def set_nameservers(domain, ns_servers) when is_list(ns_servers) do
     "/v1/domains/#{domain}"
-    |> Api.patch(%{"domain" => domain, "nameServers" => ["ns1.digitalocean.com", "ns2.digitalocean.com", "ns3.digitalocean.com"]})
+    |> Api.patch(%{"domain" => domain, "nameServers" => ns_servers})
     |> parse
   end
+  def set_nameservers(domain, ns_provider) when is_binary(ns_provider) do
+    set_nameservers(domain, String.to_atom(ns_provider))
+  end
+  def set_nameservers(domain, :digitalocean), do: set_nameservers(domain, @digitalocean_ns_servers)
 
-  defp parse({:ok, ""}), do: nil
+  defp parse({:ok, ""}), do: :ok
   defp parse({:ok, body}), do: Poison.decode!(body)
 
 end

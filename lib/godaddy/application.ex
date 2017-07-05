@@ -9,7 +9,7 @@ defmodule Godaddy.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(Godaddy.Worker, []),
+
     ]
 
     opts = [

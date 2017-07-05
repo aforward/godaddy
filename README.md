@@ -1,9 +1,11 @@
 # Godaddy
 
-> TODO: Add description**
+"A minimal library for posting messages to the GoDaddy API."
 
 
 ## Installation
+
+Add `stripe_post` to your list of dependencies (`:deps`) in `mix.exs`:
 
 ```elixir
 @deps [
@@ -11,9 +13,16 @@
 ]
 ```
 
-## License
+## Configuration
 
-> TODO: Add license
+Within your configs, you will need to provide your
+[GoDaddy API Keys](https://developer.godaddy.com/keys/).  For example,
 
-----
-Created:  2017-07-04Z
+```elixir
+config :godaddy,
+  api_key: "abc123",
+  api_secret: "def456"
+```
+
+Documentation can
+be found at [hexdocs.pm/godaddy](https://hexdocs.pm/godaddy).
