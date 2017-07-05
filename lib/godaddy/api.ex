@@ -65,13 +65,13 @@ defmodule Godaddy.Api do
   ## Examples
 
       iex> Godaddy.Api.encode_body(%{a: "one", b: "two"})
-      "a=one&b=two"
+      "{\\"b\\":\\"two\\",\\"a\\":\\"one\\"}"
 
       iex> Godaddy.Api.encode_body(%{a: "o ne"})
-      "a=o+ne"
+      "{\\"a\\":\\"o ne\\"}"
 
       iex> Godaddy.Api.encode_body(nil, %{a: "o ne"})
-      "a=o+ne"
+      "{\\"a\\":\\"o ne\\"}"
 
       iex> Godaddy.Api.encode_body("application/x-www-form-urlencoded", %{a: "o ne"})
       "a=o+ne"
@@ -95,16 +95,16 @@ defmodule Godaddy.Api do
       [{"Content-Type", "application/json"}, {"Authorization", "sso-key pqr123:mno456"}]
 
       iex> Godaddy.Api.encode_headers(%{ssokey: {"pqr123", "mno456"}})
-      [{"Authorization", "sso-key pqr123:mno456"}]
+      [{"Content-Type", "application/json"}, {"Authorization", "sso-key pqr123:mno456"}]
 
       iex> Godaddy.Api.encode_headers(%{})
-      [{"Authorization", "sso-key abc123:def456"}]
+      [{"Content-Type", "application/json"}, {"Authorization", "sso-key abc123:def456"}]
 
       iex> Godaddy.Api.encode_headers()
-      [{"Authorization", "sso-key abc123:def456"}]
+      [{"Content-Type", "application/json"}, {"Authorization", "sso-key abc123:def456"}]
 
       iex> Godaddy.Api.encode_headers(nil)
-      [{"Authorization", "sso-key abc123:def456"}]
+      [{"Content-Type", "application/json"}, {"Authorization", "sso-key abc123:def456"}]
 
   """
   def encode_headers(), do: encode_headers(%{})
